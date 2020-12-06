@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="sncfModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="8.0" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="agent">
+          <Key>
+            <PropertyRef Name="idAgent" />
+          </Key>
+          <Property Name="idAgent" Type="int" Nullable="false" />
+          <Property Name="nomAgent" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="prenomAgent" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="villeAgent" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="formation">
+          <Key>
+            <PropertyRef Name="idFormation" />
+          </Key>
+          <Property Name="idFormation" Type="int" Nullable="false" />
+          <Property Name="nomFormation" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="lieuFormation" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="prixFormation" Type="int" Nullable="false" />
+          <Property Name="dureeFormation" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="inscription">
+          <Key>
+            <PropertyRef Name="numAgent" />
+            <PropertyRef Name="numFormation" />
+          </Key>
+          <Property Name="numAgent" Type="int" Nullable="false" />
+          <Property Name="numFormation" Type="int" Nullable="false" />
+          <Property Name="presence" Type="int" Nullable="false" />
+          <Property Name="nbKm" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="inscription_ibfk_1">
+          <End Role="agent" Type="Self.agent" Multiplicity="1" />
+          <End Role="inscription" Type="Self.inscription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="agent">
+              <PropertyRef Name="idAgent" />
+            </Principal>
+            <Dependent Role="inscription">
+              <PropertyRef Name="numAgent" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="inscription_ibfk_2">
+          <End Role="formation" Type="Self.formation" Multiplicity="1" />
+          <End Role="inscription" Type="Self.inscription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="formation">
+              <PropertyRef Name="idFormation" />
+            </Principal>
+            <Dependent Role="inscription">
+              <PropertyRef Name="numFormation" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="sncfModelStoreContainer">
+          <EntitySet Name="agent" EntityType="Self.agent" Schema="sncf" store:Type="Tables" />
+          <EntitySet Name="formation" EntityType="Self.formation" Schema="sncf" store:Type="Tables" />
+          <EntitySet Name="inscription" EntityType="Self.inscription" Schema="sncf" store:Type="Tables" />
+          <AssociationSet Name="inscription_ibfk_1" Association="Self.inscription_ibfk_1">
+            <End Role="agent" EntitySet="agent" />
+            <End Role="inscription" EntitySet="inscription" />
+          </AssociationSet>
+          <AssociationSet Name="inscription_ibfk_2" Association="Self.inscription_ibfk_2">
+            <End Role="formation" EntitySet="formation" />
+            <End Role="inscription" EntitySet="inscription" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="sncfModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="agent">
+          <Key>
+            <PropertyRef Name="idAgent" />
+          </Key>
+          <Property Name="idAgent" Type="Int32" Nullable="false" />
+          <Property Name="nomAgent" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="prenomAgent" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="villeAgent" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="inscription" Relationship="Self.inscription_ibfk_1" FromRole="agent" ToRole="inscription" />
+        </EntityType>
+        <EntityType Name="formation">
+          <Key>
+            <PropertyRef Name="idFormation" />
+          </Key>
+          <Property Name="idFormation" Type="Int32" Nullable="false" />
+          <Property Name="nomFormation" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="lieuFormation" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="prixFormation" Type="Int32" Nullable="false" />
+          <Property Name="dureeFormation" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="inscription" Relationship="Self.inscription_ibfk_2" FromRole="formation" ToRole="inscription" />
+        </EntityType>
+        <EntityType Name="inscription">
+          <Key>
+            <PropertyRef Name="numAgent" />
+            <PropertyRef Name="numFormation" />
+          </Key>
+          <Property Name="numAgent" Type="Int32" Nullable="false" />
+          <Property Name="numFormation" Type="Int32" Nullable="false" />
+          <Property Name="presence" Type="Int32" Nullable="false" />
+          <Property Name="nbKm" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="agent" Relationship="Self.inscription_ibfk_1" FromRole="inscription" ToRole="agent" />
+          <NavigationProperty Name="formation" Relationship="Self.inscription_ibfk_2" FromRole="inscription" ToRole="formation" />
+        </EntityType>
+        <Association Name="inscription_ibfk_1">
+          <End Role="agent" Type="Self.agent" Multiplicity="1" />
+          <End Role="inscription" Type="Self.inscription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="agent">
+              <PropertyRef Name="idAgent" />
+            </Principal>
+            <Dependent Role="inscription">
+              <PropertyRef Name="numAgent" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="inscription_ibfk_2">
+          <End Role="formation" Type="Self.formation" Multiplicity="1" />
+          <End Role="inscription" Type="Self.inscription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="formation">
+              <PropertyRef Name="idFormation" />
+            </Principal>
+            <Dependent Role="inscription">
+              <PropertyRef Name="numFormation" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="sncfEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="agent" EntityType="Self.agent" />
+          <EntitySet Name="formation" EntityType="Self.formation" />
+          <EntitySet Name="inscription" EntityType="Self.inscription" />
+          <AssociationSet Name="inscription_ibfk_1" Association="Self.inscription_ibfk_1">
+            <End Role="agent" EntitySet="agent" />
+            <End Role="inscription" EntitySet="inscription" />
+          </AssociationSet>
+          <AssociationSet Name="inscription_ibfk_2" Association="Self.inscription_ibfk_2">
+            <End Role="formation" EntitySet="formation" />
+            <End Role="inscription" EntitySet="inscription" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="sncfModelStoreContainer" CdmEntityContainer="sncfEntities">
+          <EntitySetMapping Name="agent">
+            <EntityTypeMapping TypeName="sncfModel.agent">
+              <MappingFragment StoreEntitySet="agent">
+                <ScalarProperty Name="idAgent" ColumnName="idAgent" />
+                <ScalarProperty Name="nomAgent" ColumnName="nomAgent" />
+                <ScalarProperty Name="prenomAgent" ColumnName="prenomAgent" />
+                <ScalarProperty Name="villeAgent" ColumnName="villeAgent" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="formation">
+            <EntityTypeMapping TypeName="sncfModel.formation">
+              <MappingFragment StoreEntitySet="formation">
+                <ScalarProperty Name="idFormation" ColumnName="idFormation" />
+                <ScalarProperty Name="nomFormation" ColumnName="nomFormation" />
+                <ScalarProperty Name="lieuFormation" ColumnName="lieuFormation" />
+                <ScalarProperty Name="prixFormation" ColumnName="prixFormation" />
+                <ScalarProperty Name="dureeFormation" ColumnName="dureeFormation" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="inscription">
+            <EntityTypeMapping TypeName="sncfModel.inscription">
+              <MappingFragment StoreEntitySet="inscription">
+                <ScalarProperty Name="numAgent" ColumnName="numAgent" />
+                <ScalarProperty Name="numFormation" ColumnName="numFormation" />
+                <ScalarProperty Name="presence" ColumnName="presence" />
+                <ScalarProperty Name="nbKm" ColumnName="nbKm" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
